@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/E:/xampp/htdocs/colorwindows/app/Models/Order.php</file>
+            <file>file:/E:/xampp/htdocs/colorwindows/app/Http/Controllers/Admin/OrdersController.php</file>
+            <file>file:/E:/xampp/htdocs/colorwindows/resources/views/frontend/contact/view.blade.php</file>
+            <file>file:/E:/xampp/htdocs/colorwindows/app/Http/Controllers/UsersController.php</file>
+            <file>file:/E:/xampp/htdocs/colorwindows/resources/views/admin/orders/edit.blade.php</file>
+            <file>file:/E:/xampp/htdocs/colorwindows/resources/views/admin/layout/page-sidebar.blade.php</file>
+            <file>file:/E:/xampp/htdocs/colorwindows/public_html/assets/site/images/slde1.png</file>
+            <file>file:/E:/xampp/htdocs/colorwindows/.env</file>
+            <file>file:/E:/xampp/htdocs/colorwindows/routes/web.php</file>
+            <file>file:/E:/xampp/htdocs/colorwindows/resources/views/admin/contacts/reply.blade.php</file>
+            <file>file:/E:/xampp/htdocs/colorwindows/app/Models/OrderStatus.php</file>
+            <file>file:/E:/xampp/htdocs/colorwindows/resources/views/admin/orders/view.blade.php</file>
+            <file>file:/E:/xampp/htdocs/colorwindows/app/Http/Controllers/ContactController.php</file>
+        </group>
+    </open-files>
+</project-private>
