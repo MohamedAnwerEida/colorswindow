@@ -1,4 +1,4 @@
-    @extends('admin.layout.master')
+@extends('admin.layout.master')
 
 @section('title')
 تفاصيل الطلب
@@ -254,44 +254,37 @@
                                     <div class="well">
                                         <div class="row static-info align-reverse">
                                             <div class="col-md-8 name"> المجموع: </div>
-                                            <div class="col-md-3 value"> <?= number_format($sub_total , 2)  ?> ريال </div>
+                                            <div class="col-md-3 value"> <?= $sub_total ?> ريال </div>
                                         </div>
-                                        <?php $urgent = 0; if ($order->urgent != 0) { ?>
+                                        <?php if ($order->urgent != 0) { ?>
                                             <div class="row static-info align-reverse">
                                                 <div class="col-md-8 name"> طلب مستعجل: </div>
-                                                <div class="col-md-3 value"> <?= number_format($sub_total * 0.5 , 2) ?> ريال </div>
+                                                <div class="col-md-3 value"> <?=
+                                                number_format($sub_total * 0.5, 2)
+                                                 ?> ريال </div>
                                             </div>
-                                        <?php  $urgent = number_format($sub_total * 0.5 , 2);} ?>
-                                        <?php $pay_value = 0; if ($order->pay_value != 0) { ?>
+                                        <?php } ?>
+                                        <?php if ($order->pay_value != 0) { ?>
                                             <div class="row static-info align-reverse">
                                                 <div class="col-md-8 name"> رسوم الدفع عند الاستلام: </div>
                                                 <div class="col-md-3 value"> <?= number_format($order->pay_value, 2)  ?> ريال </div>
                                             </div>
-                                        <?php $pay_value = number_format($order->pay_value, 2)  ;} ?>
-                                        <?php $discount = 0; if ($order->discount != 0) { ?>
+                                        <?php } ?>
+                                        <?php if ($order->discount != 0) { ?>
                                             <div class="row static-info align-reverse">
                                                 <div class="col-md-8 name"> خصم: </div>
                                                 <div class="col-md-3 value"> <?= number_format($order->discount, 2)  ?> ريال </div>
                                             </div>
-                                        <?php $discount = number_format($order->discount, 2) ;} ?>
-                                        <?php $tax = 0; if ($order->tax != 0) { ?>
+                                        <?php } ?>
+                                        <?php if ($order->tax != 0) { ?>
                                             <div class="row static-info align-reverse">
                                                 <div class="col-md-8 name"> الضريبة: </div>
-                                                <?php
-                                                $tax_persent = App\Models\Settings::first()->tax/100;
-                                                $total_befor_tax = intval($sub_total) + intval($pay_value) + intval($urgent)   ;
-
-                                                $tax = number_format($total_befor_tax * $tax_persent, 2);
-                                                ?>
-                                                <div class="col-md-3 value"> <?= $tax ?> ريال </div>
+                                                <div class="col-md-3 value"> <?=  number_format($order->tax, 2)  ?> ريال </div>
                                             </div>
                                         <?php } ?>
                                         <div class="row static-info align-reverse">
                                             <div class="col-md-8 name">المجموع الكلي: </div>
-                                            <?php
-                                                $total = number_format($tax + $sub_total + $pay_value + $urgent - $discount , 2) ;
-                                                ?>
-                                            <div class="col-md-3 value"> <?= $total ?> ريال </div>
+                                            <div class="col-md-3 value"> <?= $order->total ?> ريال </div>
                                         </div>
                                     </div>
                                 </div>
