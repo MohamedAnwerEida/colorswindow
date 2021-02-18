@@ -85,7 +85,7 @@
                                         echo $product->name_ar;
                                         ?></td>
                                     <td><?= $item->quantity ?></td>
-                                    <td><?= $item->price*$item->quantity ?> ريال</td>
+                                    <td><?= $item->total ?> ريال</td>
                                 </tr>
                                 @endforeach
                             </tbody>
