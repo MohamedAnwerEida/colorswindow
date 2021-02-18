@@ -13,8 +13,8 @@ class CartsItems extends Model {
      *
      * @var array
      */
-    protected $fillable = array('cart_id', 'product_id', 'desgin_detail', 'desgin_link', 'product_width', 'product_height', 'qty', 'spec');
+    protected $fillable = array('cart_id', 'product_id', 'desgin_detail', 'desgin_link', 'product_width', 'product_height', 'qty', 'spec', 'page_no');
 
-  
+
 
 }

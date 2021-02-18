@@ -83,6 +83,7 @@ class CartController extends Controller {
             $item_oj->id = $item['id'];
             $item_oj->title = $product->name_ar;
             $item_oj->qty = $item['qty'];
+            $item_oj->page_no = $item['page_no'];
             $ispec = json_decode($item['spec'], true);
             $spec_array = array();
             $stotal_price = $product->price;
@@ -142,7 +143,7 @@ class CartController extends Controller {
 
                 $spec_array[] = $spec_oj;
             }
-            $total_price = $this->getTotals($stotal_price, $install_unit_price, $custom_price, $custom_repeat, $cprice, $v_meter);
+            $total_price = $this->getTotals($stotal_price, $install_unit_price, $custom_price, $custom_repeat, $cprice, $v_meter, $item_oj->qty,$item_oj->page_no );
 
             $item_oj->total_price = $total_price;
             $item_oj->spec_data = $spec_array;
@@ -151,7 +152,8 @@ class CartController extends Controller {
         return $data_array;
     }
 
-    public function getTotals($total_price, $install_unit_price, $custom_price, $custom_repeat, $cprice, $v_meter) {
+    public function getTotals($total_price, $install_unit_price, $custom_price, $custom_repeat, $cprice, $v_meter, $q, $page_no ) {
+        $old_price = $total_price;
         if ($v_meter != 1) {
             foreach ($cprice as $value) {
                 if ($value) {
@@ -196,6 +198,12 @@ class CartController extends Controller {
                 }
             }
         }
+        if ($q != 1 && ($old_price * 1) == $total_price  && $old_price != 0) {
+            return $old_price * $q;
+        }
+        if ($page_no) {
+            return $page_no * $total_price;
+        }
         return $total_price;
     }
 
@@ -210,6 +218,9 @@ class CartController extends Controller {
         $data_items['product_height'] = $request->product_height ? $request->product_height : 0;
         $data_items['qty'] = $request->qty ? $request->qty : 1;
         $data_items['product_id'] = $product_id;
+        if ($request->page_no) {
+            $data_items['page_no'] = $request->page_no;
+        }
 
         if ($mycart) {
             //if yes add to order items
