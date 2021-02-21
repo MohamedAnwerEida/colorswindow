@@ -12,7 +12,7 @@ class OrderProduct extends Model {
      *
      * @var array
      */
-    protected $fillable = array('order_id', 'name', 'design', 'design_data', 'spec', 'quantity', 'price', 'total', 'meter_height', 'meter_width');
+    protected $fillable = array('order_id', 'name', 'design', 'design_data', 'spec', 'quantity', 'price', 'total', 'meter_height', 'meter_width', 'page_no');
 
     function checkMyorderForProduct($product_id, $customer_id) {
         return $this

@@ -166,39 +166,6 @@ class OrderController extends Controller {
             } else {
                 $pay_type = 1;
             }
-$Orders = Order::all();
-
-foreach ($Orders as $order) {
-$sub_total = 0;
-$urgent = 0;
-$pay_value = 0;
-$discount = 0;
-$tax = 0;
-foreach ($order->items as $item) {
-$sub_total += $item->price;
-}
-if ($order->urgent != 0) {
-$urgent = number_format($sub_total * 0.5 , 2);
-}
-if ($order->pay_value != 0) {
-$pay_value = number_format($order->pay_value, 2);
-}
-if ($order->discount != 0) {
-
-$discount = $order->discount ;
-}
-if ($order->tax != 0) {
-$tax_persent = number_format(Settings::first()->tax/100, 2);
-$total_befor_tax = $sub_total + $pay_value + $urgent  ;
-$tax = number_format($total_befor_tax * $tax_persent, 2);
-}
-
-$total = $tax + $sub_total +  $pay_value + $urgent - $discount ;
-$total = number_format((float)$total, 2);
-$order->tax = $tax;
-$order->total = $total;
-$order->save();
-}
             $settings = new Settings();
             $set = $settings->getSetting(1);
             $user = new Customers();
@@ -210,11 +177,11 @@ $order->save();
                 $items_data = $this->getitemdata($mycart->items);
             }
             $total = $this->getFinalTotals($items_data);
-            $extra = ($mycart->urgent == 1 ? $total * 0.5 : 0);
+            $extra = ($mycart->urgent == 1 ? number_format($total * 0.5 , 2)  : 0);
             $total = $total + $extra;
-            $discount = $mycart->discount_type == 'fixed' ? $mycart->discount_value : $total * (($mycart->discount_value / 100));
+            $discount = $mycart->discount_type == 'fixed' ? $mycart->discount_value : number_format($total * ($mycart->discount_value / 100) , 2) ;
             $total += $mycart->pay_type - $discount;
-            $tax = $total * ($set->tax / 100);
+            $tax = number_format( $total * ($set->tax / 100), 2) ;
             //    print_r($user_info);
             //print_r($items_data);
 //            echo $is_paid;
@@ -253,6 +220,7 @@ $order->save();
                         'design_data' => $desgin_data,
                         'spec' => $item->spec,
                         'quantity' => $qty,
+                        'page_no' => $item->page_no,
                         'price' => (double) $item->total_price,
                         'total' => $item->total_price,
                         'meter_height' => $item->meter_height,
@@ -295,7 +263,6 @@ $order->save();
         parent::$data['order'] = Order::findOrFail($id);
         return view('frontend.orders.order', parent::$data);
     }
-
     /**
      * Show the form for editing the specified resource.
      *
@@ -335,8 +302,8 @@ $order->save();
         return $total_price;
     }
 
-    public function getTotals($stotal_price, $install_unit_price, $custom_price, $custom_repeat, $cprice, $v_meter) {
-        $total_price = $stotal_price;
+    public function getTotals($total_price, $install_unit_price, $custom_price, $custom_repeat, $cprice, $v_meter, $q, $page_no) {
+        $old_price = $total_price;
         if ($v_meter != 1) {
             foreach ($cprice as $value) {
                 if ($value) {
@@ -350,7 +317,7 @@ $order->save();
                     if ($value->view == 1) {
                         //الغاء سعر المواصفات الخاصة في حالة اخفائها
                         if ($custom_repeat == 1) {
-                            $ccprice = custom_price;
+                            $ccprice = $custom_price;
                         } else {
                             $ccprice = $custom_price * $sqty;
                         }
@@ -381,6 +348,12 @@ $order->save();
                 }
             }
         }
+        if ($q != 1 && ($old_price * 1) == $total_price  && $old_price != 0) {
+            return $old_price * $q;
+        }
+        if ($page_no) {
+            return $page_no * $total_price;
+        }
         return $total_price;
     }
 
@@ -395,7 +368,7 @@ $order->save();
             $item_oj->qty = $item['qty'];
             $ispec = json_decode($item['spec'], true);
             $item_oj->spec = $item['spec'];
-
+            $item_oj->page_no = $item['page_no'];
             $spec_array = array();
             $stotal_price = $product->price;
             $perc = 0;
@@ -457,7 +430,7 @@ $order->save();
             }
             $item_oj->meter_width = $meter_width;
             $item_oj->meter_height = $meter_height;
-            $total_price = $this->getTotals($stotal_price, $install_unit_price, $custom_price, $custom_repeat, $cprice, $v_meter);
+            $total_price = $this->getTotals($stotal_price, $install_unit_price, $custom_price, $custom_repeat, $cprice, $v_meter, $item_oj->qty,$item_oj->page_no );
             $item_oj->total_price = $total_price;
             $item_oj->spec_data = $spec_array;
             $data_array[] = $item_oj;
@@ -484,10 +457,10 @@ $order->save();
         //Config::set('mail.password', 'usgovvhhmlcmgsxo');
         Config::set('mail.password', 'No1234reply#');
         Config::set('mail.encryption', 'tls');
-//        Mail::send($view, $data, function ($message) use ($email, $name, $token, $title) {
-//
-//            $message->to($users)->subject($title)->from('info@colorswindow.com', 'Colors Window');
-//        });
+        //Mail::send($view, $data, function ($message) use ($email, $name, $token, $title) {
+
+           // $message->to($users)->subject($title)->from('info@colorswindow.com', 'Colors Window');
+       // });
         $pdf = $this->getpdfInvoice($order);
         Mail::send($view, $data, function($message) use ($email, $name, $token, $title, $pdf, $order_id) {
             $users[] = $email;

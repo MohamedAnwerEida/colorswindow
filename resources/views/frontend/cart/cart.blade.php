@@ -45,6 +45,9 @@
                                     <b><?= $spec->cat_title ?></b>:<?= $spec->spec_title ?><br>
                                     @endif
                                     @endforeach
+                                    @if($item->page_no)
+                                        <b> عدد الصفحات </b>: {{$item->page_no}}
+                                    @endif
                                 </td>
                                 <td>{{ $item->total_price}} ريال</td>
                                 <?php $total += $item->total_price ?>

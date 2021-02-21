@@ -231,6 +231,11 @@
                                                                 <?php } ?>
                                                                 @endforeach
                                                                 @endif
+                                                                @if($item->page_no)
+                                                                    <b> عدد الصفحات </b>: {{$item->page_no}}
+                                                                    <br>
+                                                                @endif
+
                                                                 <b>تفاصيل التصميم</b>:<?= $item->design_data ?><br>
                                                             </td>
                                                             <td><?= round($item->price / $item->quantity, 1) ?> ريال</td>
